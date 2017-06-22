@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript">
+		var socket = io('http://localhost:8080');
+		socket.on('message-from-server', function(event) {
+			document.body.appendChild(document.createTextNode(event.greeting));
+			socket.emit('message-from-client', {
+				greeting: 'hello from client'
+			})
+		});
+		var bitcoinSocket = io('https://websocket.btcchina.com/');
+		bitcoinSocket.emit('subscribe', 'marketdata_cnybtc');
+		bitcoinSocket.on('connect', function() {
+			bitcoinSocket.on('ticker', function(data) {
+				console.log(data);
+			});
+		});
+	</script>
+</body>
+</html>
